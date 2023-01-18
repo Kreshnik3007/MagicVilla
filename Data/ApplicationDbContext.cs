@@ -62,7 +62,7 @@ public class ApplicationDbContext: DbContext
                   Rate = 550,
                   Sqft = 900,
                   Amenity = "",
-                  CreatedDate = DateTime.Now
+                  CreatedDate = DateTime.Now,
               },
               new Villa
               {
@@ -74,8 +74,10 @@ public class ApplicationDbContext: DbContext
                   Rate = 600,
                   Sqft = 1100,
                   Amenity = "",
-                  CreatedDate = DateTime.Now
+                  CreatedDate = DateTime.Now,
+                
               }
         );
     }
 }
+

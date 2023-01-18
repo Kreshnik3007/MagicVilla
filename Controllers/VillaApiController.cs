@@ -23,10 +23,10 @@ public class VillaApiController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Route("get")]
-    public ActionResult<List<VillaDTO>> GetVillas()
+    public async Task<ActionResult<List<VillaDTO>>> GetVillas()
     {
         
-        return Ok(_db.Villas.ToList());
+        return Ok( await _db.Villas.ToListAsync());
     }
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -34,7 +34,7 @@ public class VillaApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Route("{id:int}", Name = "GetVilla")]
 
-    public ActionResult<VillaDTO> GetVilla(int id)
+    public async Task<ActionResult<VillaDTO>> GetVilla(int id)
     {
         if (id == 0)
         {
@@ -42,7 +42,7 @@ public class VillaApiController : ControllerBase
             return BadRequest();
         }
 
-        var villa = _db.Villas.FirstOrDefault(u => u.Id == id);
+        var villa = await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
         if (villa == null)
         {
             return NotFound();
@@ -56,17 +56,17 @@ public class VillaApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Route("post")]
    
-    public ActionResult<VillaDTO> CreateVilla([FromBody]VillaCreateDTO villaDTO)
+    public async Task<ActionResult<VillaDTO>> CreateVilla([FromBody]VillaCreateDTO villaDTO)
     {
         // if (!ModelState.IsValid)
         // {
         //     return BadRequest(ModelState);
         // }
-        // if (_db.Villas.Any(u => string.Equals(u.Name, villaDTO.Name, StringComparison.CurrentCultureIgnoreCase)))
-        // {
-        //     ModelState.AddModelError("", "Villa Already Exists");
-        //     return BadRequest(ModelState);
-        // }
+        if ( await _db.Villas.AnyAsync(u => string.Equals(u.Name, villaDTO.Name)))
+        {
+            ModelState.AddModelError("", "Villa Already Exists");
+            return BadRequest(ModelState);
+        }
         
         if (villaDTO == null)
         {
@@ -84,8 +84,8 @@ public class VillaApiController : ControllerBase
             Sqft = villaDTO.Sqft,
 
         };
-        _db.Villas.Add(model);
-        _db.SaveChanges();
+       await _db.Villas.AddAsync(model);
+       await _db.SaveChangesAsync();
         
         return CreatedAtRoute("GetVilla", new {id = model.Id}, model);
     }
@@ -164,6 +164,7 @@ public class VillaApiController : ControllerBase
             Ocupancy = villa.Ocupancy,
             Rate = villa.Rate,
             Sqft = villa.Sqft,
+            CreatedDate = DateTime.Now            
         };
         if (villa == null)
         {

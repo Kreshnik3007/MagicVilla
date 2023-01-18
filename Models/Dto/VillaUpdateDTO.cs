@@ -20,5 +20,7 @@ public class VillaUpdateDTO
     [Required]
     public string? imageUrl { get; set; }
     public string? Amenity { get; set; }
+    
+    public DateTime CreatedDate { get; set; }
    
 }
