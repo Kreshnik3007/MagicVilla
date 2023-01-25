@@ -1,9 +1,11 @@
 
+using MagicVilla_VillaApi;
 using MagicVilla_VillaApi.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
